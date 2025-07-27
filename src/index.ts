@@ -1,8 +1,4 @@
-import { default as useRequest } from './hooks/useRequest';
-import { default as useMutation } from './hooks/useMutation';
-import { Request, MutationRequest } from './types';
-import { generateInitialState } from './utils/stateGenerators';
+import { registerMutation, loginMutation } from './generics/mutations';
+import useRegisterUser from './hooks/useRegisterUser';
 
-export { useRequest, useMutation, generateInitialState }
-
-export type { Request, MutationRequest }
+export { registerMutation, loginMutation, useRegisterUser }
