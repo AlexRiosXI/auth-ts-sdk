@@ -1,6 +1,6 @@
 import { useMutation } from "@sierra-madre/core-ts-sdk"
 import { registerMutation } from "../generics/mutations"
-import { useState } from "react"
+
 
 const useRegisterUser = () => {
     
@@ -12,19 +12,28 @@ const useRegisterUser = () => {
         error: registerCallError, 
         register: registerFormInput, 
         errors: registerFormErrors, 
+        setErrors: setRegisterFormErrors,
         partialValidation: registerPartialValidation 
     } = useMutation(registerMutation)
 
-    const handleRegister = (onSuccess?: (data: any) => void, onError?: (error: Error) => void) => {
+    const handleRegister = (onSuccess?: (data: any) => void, onError?: (error: any) => void) => {
         registerUser((data: any) => {
             console.log(data, "data")
             onSuccess?.(data)
-        }, (error: Error) => {
-            if (typeof error === "string" && error.toLowerCase().includes("email")) {
-                setRegisterFormErrors({...registerFormErrors, email: [error]})
+        }, (error: any) => {
+            const errorMessage = error?.message || error?.toString() || String(error)
+            
+            if (errorMessage.toLowerCase().includes("email")) {
+                setRegisterFormErrors({
+                    ...(typeof registerFormErrors === "object" && registerFormErrors !== null ? registerFormErrors : {}),
+                    email: [errorMessage]
+                })
             }
-            if (typeof error === "string" && error.toLowerCase().includes("password")) {
-                setRegisterFormErrors({...registerFormErrors, password: [error]})
+            if (errorMessage.toLowerCase().includes("password")) {
+                setRegisterFormErrors({
+                    ...(typeof registerFormErrors === "object" && registerFormErrors !== null ? registerFormErrors : {}),
+                    password: [errorMessage]
+                })
             }
             onError?.(error)
         })

@@ -1,18 +1,20 @@
 import { useMutation } from "@sierra-madre/core-ts-sdk"
 import { loginMutation } from "../generics/mutations"
-import { useState } from "react"
+
 
 const useLogin = () => {
-    const [loginErrors, setLoginErrors] = useState<Record<string, string[]>>({})
+    
 
     const { 
         mutate: login, 
-        data: loginData, 
+        data: loginForm, 
         isLoading: loginLoading, 
         error: loginError, 
-        register: loginForm, 
+        register: registerLoginInput, 
         errors: loginFormErrors, 
-        partialValidation: loginPartialValidation 
+        partialValidation: loginPartialValidation,
+        setErrors: setLoginFormErrors,
+        
     } = useMutation(loginMutation)
 
     const handleLogin = (onSuccess?: (data: any) => void, onError?: (error: Error) => void) => {
@@ -20,8 +22,10 @@ const useLogin = () => {
             console.log(data, "data")
             onSuccess?.(data)
         }, (error: Error) => {
-            if (typeof error === "string" && error.toLowerCase().includes("email")) {
-                setLoginErrors({...loginErrors, email: [error]})
+            if (typeof error === "string" && (error.toLowerCase().includes("email")) || (error.toLowerCase().includes("user"))) {
+                setLoginFormErrors({...loginFormErrors, email: [error]})
+            }else if (typeof error === "string" && error.toLowerCase().includes("password")) {
+                setLoginFormErrors({...loginFormErrors, password: [error]})
             }
             onError?.(error)
         })
@@ -29,14 +33,13 @@ const useLogin = () => {
 
     return { 
         login, 
-        loginData, 
+        loginForm, 
         loginLoading, 
         loginError, 
-        loginForm, 
+        registerLoginInput, 
         loginFormErrors, 
         loginPartialValidation,
-        loginErrors,
-        setLoginErrors,
+        setLoginFormErrors,
         handleLogin
     }
 }

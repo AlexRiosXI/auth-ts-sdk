@@ -1,9 +1,9 @@
-import {MutationRequest} from "@sierra-madre/core-ts-sdk"
-import { registerSchema, loginSchema } from "./schemas"
+import {MutationRequest, Request} from "@sierra-madre/core-ts-sdk"
+import { registerSchema, loginSchema, emptySchema } from "./schemas"
 
 // Predefined mutation for register user
 export const registerMutation: MutationRequest = {
-    baseUrl: 'http://localhost:5001',
+    baseUrl: 'https://localhost:5001',
     schema: registerSchema,
     path: '/auth/register',
     method: 'POST',
@@ -19,7 +19,7 @@ export const registerMutation: MutationRequest = {
 
 // Predefined mutation for login user
 export const loginMutation: MutationRequest = {
-    baseUrl: 'http://localhost:5001',
+    baseUrl: 'https://localhost:5001',
     schema: loginSchema,
     path: '/auth/login',
     method: 'POST',
@@ -31,4 +31,44 @@ export const loginMutation: MutationRequest = {
     contentType: 'application/json',
     succesfulStatusCode: 200
     
+}
+
+export const refreshTokenMutation: MutationRequest = {
+    baseUrl: 'https://localhost:5001',
+    schema: emptySchema,
+    path: '/auth/refresh-token',
+    method: 'POST',
+    body: {},
+    params: {},
+    query: {},
+    responseType: 'json',
+    timeout: 10000,
+    contentType: 'application/json',
+    succesfulStatusCode: 200
+}
+
+export const logoutMutation: MutationRequest = {
+    baseUrl: 'https://localhost:5001',
+    schema: emptySchema,
+    path: '/auth/logout',
+    method: 'POST',
+    body: {},
+    params: {},
+    query: {},
+    responseType: 'json',
+    timeout: 10000,
+    contentType: 'application/json',
+    succesfulStatusCode: 200
+}
+
+export const getCurrentUserMutation: Request = {
+    baseUrl: 'https://localhost:5001',
+    path: '/auth/me',
+    method: 'GET',
+    body: {},
+    params: {},
+    query: {},
+    responseType: 'json',
+    timeout: 10000,
+    contentType: 'application/json',
 }
