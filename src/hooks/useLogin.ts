@@ -14,12 +14,12 @@ const useLogin = () => {
         errors: loginFormErrors, 
         partialValidation: loginPartialValidation,
         setErrors: setLoginFormErrors,
-        
     } = useMutation(loginMutation)
 
     const handleLogin = (onSuccess?: (data: any) => void, onError?: (error: Error) => void) => {
+        sessionStorage.setItem("sm-refresh-token", "perro")
         login((data: any) => {
-            console.log(data, "data")
+            sessionStorage.setItem("sm-access-token", data.access_token)
             onSuccess?.(data)
         }, (error: Error) => {
             if (typeof error === "string" && (error.toLowerCase().includes("email")) || (error.toLowerCase().includes("user"))) {
