@@ -1,7 +1,7 @@
 import { registerMutation, loginMutation } from './generics/mutations';
 import useRegisterUser from './hooks/useRegisterUser';
 import useLogin from './hooks/useLogin';
-import useAuth from './hooks/useAuth';
+import useLogout from './hooks/useLogout';
 import { useAuthedRequest, useAuthedMutation } from './wrappers/requestWrappers';
 
-export { registerMutation, loginMutation, useRegisterUser, useLogin, useAuth, useAuthedRequest, useAuthedMutation }
+export { registerMutation, loginMutation, useRegisterUser, useLogin, useLogout, useAuthedRequest, useAuthedMutation }

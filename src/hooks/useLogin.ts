@@ -16,16 +16,24 @@ const useLogin = () => {
         setErrors: setLoginFormErrors,
     } = useMutation(loginMutation)
 
-    const handleLogin = (onSuccess?: (data: any) => void, onError?: (error: Error) => void) => {
+    const handleLogin = (onSuccess?: (data: any) => void, onError?: (error: any) => void) => {
         sessionStorage.setItem("sm-refresh-token", "perro")
         login((data: any) => {
             sessionStorage.setItem("sm-access-token", data.access_token)
             onSuccess?.(data)
-        }, (error: Error) => {
-            if (typeof error === "string" && (error.toLowerCase().includes("email")) || (error.toLowerCase().includes("user"))) {
-                setLoginFormErrors({...loginFormErrors, email: [error]})
-            }else if (typeof error === "string" && error.toLowerCase().includes("password")) {
-                setLoginFormErrors({...loginFormErrors, password: [error]})
+        }, (error: any) => {
+            const errorMessage = error?.message || error?.toString() || String(error)
+            
+            if (errorMessage.toLowerCase().includes("email") || errorMessage.toLowerCase().includes("user")) {
+                setLoginFormErrors({
+                    ...(typeof loginFormErrors === "object" && loginFormErrors !== null ? loginFormErrors : {}),
+                    email: [errorMessage]
+                })
+            } else if (errorMessage.toLowerCase().includes("password")) {
+                setLoginFormErrors({
+                    ...(typeof loginFormErrors === "object" && loginFormErrors !== null ? loginFormErrors : {}),
+                    password: [errorMessage]
+                })
             }
             onError?.(error)
         })

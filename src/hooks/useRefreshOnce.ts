@@ -20,7 +20,7 @@ export function useRefreshOnce() {
         if (token) sessionStorage.setItem('sm-access-token', token);
         return token;
       })
-      .catch((err) => {
+      .catch(() => {
         sessionStorage.removeItem('sm-access-token');
         return null;
       })
