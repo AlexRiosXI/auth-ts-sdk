@@ -17,7 +17,6 @@ const useLogin = () => {
     } = useMutation(loginMutation)
 
     const handleLogin = (onSuccess?: (data: any) => void, onError?: (error: any) => void) => {
-        sessionStorage.setItem("sm-refresh-token", "perro")
         login((data: any) => {
             sessionStorage.setItem("sm-access-token", data.access_token)
             onSuccess?.(data)
@@ -38,6 +37,8 @@ const useLogin = () => {
             onError?.(error)
         })
     }
+
+    
 
     return { 
         login, 
