@@ -14,8 +14,18 @@ export function useRefreshOnce() {
     const existing = getInflightRefresh();
     if (existing) return existing;
 
-    const p = mutate()
-      .then((res) => {
+    const p = mutate({
+      onSuccess: (res: any) => {
+        const token = res?.access_token ?? null;
+        if (token) sessionStorage.setItem('sm-access-token', token);
+        return token;
+      },
+      onError: () => {
+        sessionStorage.removeItem('sm-access-token');
+        return null;
+      }
+    })
+      .then((res: any) => {
         const token = res?.data?.access_token ?? null;
         if (token) sessionStorage.setItem('sm-access-token', token);
         return token;

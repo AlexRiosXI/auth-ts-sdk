@@ -10,10 +10,19 @@ type CurrentUser = {
 const useAuth = () => {
 
     
-    const { data: currentUser, isLoading: currentUserLoading, error: currentUserError, query: getCurrentUser } = useRequest(getCurrentUserMutation)
+    const { data: currentUser, isLoading: currentUserLoading, error: currentUserError, query: getCurrentUser } = useRequest(getCurrentUserMutation, null)
 
     useEffect(() => {
-        getCurrentUser()
+        const fetchUser = async () => {
+            const res = await getCurrentUser()        
+            if(res?.data?.access_token){
+                sessionStorage.setItem("sm-access-token", res.data.access_token)
+                
+            }
+        }
+        
+        fetchUser()
+            
     }, [])
 
     return {

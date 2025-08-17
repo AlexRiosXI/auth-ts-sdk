@@ -25,21 +25,26 @@ interface AuthProviderProps {
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  console.log("AuthProvider")
+  
   const {
     data: currentUser,
     isLoading: currentUserLoading,
     error: currentUserError,
     query: getCurrentUser,
-  } = useRequest<CurrentUser>(getCurrentUserMutation); // <- tipa la respuesta de la query
+  } = useRequest<CurrentUser>(getCurrentUserMutation, null); // <- tipa la respuesta de la query
 
   useEffect(() => {
-    getCurrentUser();
+    const fetchUser = async () => {
+      const res = await getCurrentUser();
+      if(res?.data?.access_token){
+        sessionStorage.setItem("sm-access-token", res.data.access_token)
+      }
+    }
+    
+    fetchUser();
   }, []);
 
-  useEffect(() => {
-    console.log(currentUser)
-  }, [currentUser])
+  
 
   return (
     <AuthContext.Provider

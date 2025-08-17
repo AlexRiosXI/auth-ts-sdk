@@ -4,7 +4,7 @@ import type { Request, MutationRequest } from '@sierra-madre/core-ts-sdk';
 
 export const useAuthedRequest = <T>(req: Request) => {
   const refreshOnce = useRefreshOnce();
-  const core = useRequest<T>(req);
+  const core = useRequest<T>(req, null);
 
   const query = async () => {
     let res = await core.query();
@@ -25,7 +25,20 @@ export const useAuthedRequest = <T>(req: Request) => {
   return { ...core, query };
 };
 
-export const useAuthedMutation = (mutation: MutationRequest) => {
+type AuthedMutationReturn = {
+  data: any;
+  error: any;
+  status: number;
+  mutate: any;
+  reset: any;
+  isLoading: boolean;
+  register: any;
+  errors: any;
+  partialValidation: any;
+  setErrors: any;
+}
+
+export const useAuthedMutation = (mutation: MutationRequest): AuthedMutationReturn => {
   const refreshOnce = useRefreshOnce();
 
   const core = useMutation(mutation);

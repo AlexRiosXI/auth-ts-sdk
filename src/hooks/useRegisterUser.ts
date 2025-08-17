@@ -1,8 +1,19 @@
 import { useMutation } from "@sierra-madre/core-ts-sdk"
 import { registerMutation } from "../generics/mutations"
 
+type RegisterUserReturn = {
+    registerUser: any;
+    registerForm: any;
+    registerCallLoading: boolean;
+    registerCallError: any;
+    registerFormInput: any;
+    registerFormErrors: any;
+    registerPartialValidation: any;
+    setRegisterFormErrors: any;
+    handleRegister: (onSuccess?: (data: any) => void, onError?: (error: any) => void) => void;
+}
 
-const useRegisterUser = () => {
+const useRegisterUser = (): RegisterUserReturn => {
     
 
     const { 
@@ -17,25 +28,27 @@ const useRegisterUser = () => {
     } = useMutation(registerMutation)
 
     const handleRegister = (onSuccess?: (data: any) => void, onError?: (error: any) => void) => {
-        registerUser((data: any) => {
-            console.log(data, "data")
-            onSuccess?.(data)
-        }, (error: any) => {
-            const errorMessage = error?.message || error?.toString() || String(error)
-            
-            if (errorMessage.toLowerCase().includes("email")) {
-                setRegisterFormErrors({
-                    ...(typeof registerFormErrors === "object" && registerFormErrors !== null ? registerFormErrors : {}),
-                    email: [errorMessage]
-                })
+        registerUser({
+            onSuccess: (data: any) => {
+                onSuccess?.(data)
+            },
+            onError: (error: any) => {
+                const errorMessage = error?.message || error?.toString() || String(error)
+                
+                if (errorMessage.toLowerCase().includes("email")) {
+                    setRegisterFormErrors({
+                        ...(typeof registerFormErrors === "object" && registerFormErrors !== null ? registerFormErrors : {}),
+                        email: [errorMessage]
+                    })
+                }
+                if (errorMessage.toLowerCase().includes("password")) {
+                    setRegisterFormErrors({
+                        ...(typeof registerFormErrors === "object" && registerFormErrors !== null ? registerFormErrors : {}),
+                        password: [errorMessage]
+                    })
+                }
+                onError?.(error)
             }
-            if (errorMessage.toLowerCase().includes("password")) {
-                setRegisterFormErrors({
-                    ...(typeof registerFormErrors === "object" && registerFormErrors !== null ? registerFormErrors : {}),
-                    password: [errorMessage]
-                })
-            }
-            onError?.(error)
         })
     }
 
