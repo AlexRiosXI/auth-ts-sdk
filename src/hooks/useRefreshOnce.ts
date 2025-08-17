@@ -1,7 +1,10 @@
-import { useCallback } from 'react';
-import { useMutation } from '@sierra-madre/core-ts-sdk';
-import { refreshTokenMutation } from '../generics/mutations';
-import { getInflightRefresh, setInflightRefresh } from '../helpers/refreshToken';
+import { useCallback } from "react";
+import { useMutation } from "@sierra-madre/core-ts-sdk";
+import { refreshTokenMutation } from "../generics/mutations";
+import {
+  getInflightRefresh,
+  setInflightRefresh,
+} from "../helpers/refreshToken";
 
 export function useRefreshOnce() {
   const { mutate } = useMutation(refreshTokenMutation);
@@ -17,21 +20,21 @@ export function useRefreshOnce() {
     const p = mutate({
       onSuccess: (res: any) => {
         const token = res?.access_token ?? null;
-        if (token) sessionStorage.setItem('sm-access-token', token);
+        if (token) sessionStorage.setItem("sm-access-token", token);
         return token;
       },
       onError: () => {
-        sessionStorage.removeItem('sm-access-token');
+        sessionStorage.removeItem("sm-access-token");
         return null;
-      }
+      },
     })
       .then((res: any) => {
         const token = res?.data?.access_token ?? null;
-        if (token) sessionStorage.setItem('sm-access-token', token);
+        if (token) sessionStorage.setItem("sm-access-token", token);
         return token;
       })
       .catch(() => {
-        sessionStorage.removeItem('sm-access-token');
+        sessionStorage.removeItem("sm-access-token");
         return null;
       })
       .finally(() => {

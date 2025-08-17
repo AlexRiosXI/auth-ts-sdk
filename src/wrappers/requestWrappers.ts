@@ -1,8 +1,20 @@
-import { useRefreshOnce } from '../hooks/useRefreshOnce';
-import { useMutation, useRequest } from '@sierra-madre/core-ts-sdk';
-import type { Request, MutationRequest } from '@sierra-madre/core-ts-sdk';
+import { useRefreshOnce } from "../hooks/useRefreshOnce";
+import { useMutation, useRequest } from "@sierra-madre/core-ts-sdk";
+import type { Request, MutationRequest } from "@sierra-madre/core-ts-sdk";
 
-export const useAuthedRequest = <T>(req: Request) => {
+type UseRequestResult<T> = {
+  data: T | null;
+  status: number;
+  isLoading: boolean;
+  query: () => Promise<{ status: number; data?: T }>;
+};
+type UseAuthedRequestResult<T> = UseRequestResult<T> & {
+  query: () => Promise<{ status: number; data?: T }>;
+};
+
+export const useAuthedRequest = <T>(
+  req: Request,
+): UseAuthedRequestResult<T> => {
   const refreshOnce = useRefreshOnce();
   const core = useRequest<T>(req, null);
 
@@ -10,16 +22,10 @@ export const useAuthedRequest = <T>(req: Request) => {
     let res = await core.query();
     if (res.status !== 401) return res;
 
-    // Intentar refresh
     const newToken = await refreshOnce();
-    if (!newToken) {
-      // Si no se pudo refrescar, devolvemos el 401 original
-      return res;
-    }
+    if (!newToken) return res;
 
-    // Volver a ejecutar la query con el nuevo token
-    res = await core.query();
-    return res;
+    return await core.query();
   };
 
   return { ...core, query };
@@ -36,9 +42,11 @@ type AuthedMutationReturn = {
   errors: any;
   partialValidation: any;
   setErrors: any;
-}
+};
 
-export const useAuthedMutation = (mutation: MutationRequest): AuthedMutationReturn => {
+export const useAuthedMutation = (
+  mutation: MutationRequest,
+): AuthedMutationReturn => {
   const refreshOnce = useRefreshOnce();
 
   const core = useMutation(mutation);

@@ -17,7 +17,9 @@ export type AuthContextType = {
 };
 
 // Crea el contexto con tipo opcional (puede ser undefined si no está dentro del Provider)
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined,
+);
 
 // Props del Provider
 interface AuthProviderProps {
@@ -25,7 +27,6 @@ interface AuthProviderProps {
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  
   const {
     data: currentUser,
     isLoading: currentUserLoading,
@@ -36,15 +37,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     const fetchUser = async () => {
       const res = await getCurrentUser();
-      if(res?.data?.access_token){
-        sessionStorage.setItem("sm-access-token", res.data.access_token)
+      if (res?.data?.access_token) {
+        sessionStorage.setItem("sm-access-token", res.data.access_token);
       }
-    }
-    
+    };
+
     fetchUser();
   }, []);
-
-  
 
   return (
     <AuthContext.Provider
