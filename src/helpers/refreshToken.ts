@@ -1,4 +1,3 @@
-
 let inflightRefresh: Promise<string | null> | null = null;
 
 export const getInflightRefresh = () => inflightRefresh;
